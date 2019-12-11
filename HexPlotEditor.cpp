@@ -1,88 +1,41 @@
 // HexPlotEditor.cpp : Defines the entry point for the application.
 //
 
-#include "pch.h"
-#include "framework.h"
+////////////////////////////////////////////////////////////////////////////////
+// include
+////////////////////////////////////////////////////////////////////////////////
 #include "HexPlotEditor.h"
 
-#define MAX_LOADSTRING 100
 
-// Global Variables:
-HINSTANCE hInst;                                // current instance
-WCHAR szTitle[MAX_LOADSTRING];                  // The title bar text
-WCHAR szWindowClass[MAX_LOADSTRING];            // the main window class name
-
-// Forward declarations of functions included in this code module:
-ATOM                MyRegisterClass(HINSTANCE hInstance);
-BOOL                InitInstance(HINSTANCE, int);
-LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
-INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
-
-int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
-                     _In_opt_ HINSTANCE hPrevInstance,
-                     _In_ LPWSTR    lpCmdLine,
-                     _In_ int       nCmdShow)
+////////////////////////////////////////////////////////////////////////////////
+// function
+////////////////////////////////////////////////////////////////////////////////
+LRESULT CALLBACK EditProc_Cmd(HWND hEdit, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-    UNREFERENCED_PARAMETER(hPrevInstance);
-    UNREFERENCED_PARAMETER(lpCmdLine);
+	switch (msg)
+	{
+	case WM_KEYDOWN:
+	{
+		if (VK_RETURN == wParam)
+		{
+			HWND hParent = GetParent(hEdit);
+			SendMessage(hParent, msg, wParam, lParam);
+			// SetFocus(GetNextDlgTabItem(hParent, hEdit, FALSE));
+			return 0;
+		}
+	}
+	break;
 
-    // TODO: Place code here.
 
-    // Initialize global strings
-    LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
-    LoadStringW(hInstance, IDC_HEXPLOTEDITOR, szWindowClass, MAX_LOADSTRING);
-    MyRegisterClass(hInstance);
+	case WM_CHAR:
+		if (VK_RETURN == wParam)
+			return 0;
+		break;
+	}
 
-    // Perform application initialization:
-    if (!InitInstance (hInstance, nCmdShow))
-    {
-        return FALSE;
-    }
-
-    HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_HEXPLOTEDITOR));
-
-    MSG msg;
-
-    // Main message loop:
-    while (GetMessage(&msg, nullptr, 0, 0))
-    {
-        if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
-        {
-            TranslateMessage(&msg);
-            DispatchMessage(&msg);
-        }
-    }
-
-    return (int) msg.wParam;
+	return CallWindowProc(oldEditProc, hEdit, msg, wParam, lParam);
 }
 
-
-
-//
-//  FUNCTION: MyRegisterClass()
-//
-//  PURPOSE: Registers the window class.
-//
-ATOM MyRegisterClass(HINSTANCE hInstance)
-{
-    WNDCLASSEXW wcex;
-
-    wcex.cbSize = sizeof(WNDCLASSEX);
-
-    wcex.style          = CS_HREDRAW | CS_VREDRAW;
-    wcex.lpfnWndProc    = WndProc;
-    wcex.cbClsExtra     = 0;
-    wcex.cbWndExtra     = 0;
-    wcex.hInstance      = hInstance;
-    wcex.hIcon          = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_HEXPLOTEDITOR));
-    wcex.hCursor        = LoadCursor(nullptr, IDC_ARROW);
-    wcex.hbrBackground  = (HBRUSH)(COLOR_WINDOW+1);
-    wcex.lpszMenuName   = MAKEINTRESOURCEW(IDC_HEXPLOTEDITOR);
-    wcex.lpszClassName  = szWindowClass;
-    wcex.hIconSm        = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
-
-    return RegisterClassExW(&wcex);
-}
 
 //
 //   FUNCTION: InitInstance(HINSTANCE, int)
@@ -96,20 +49,9 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 //
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
-   hInst = hInstance; // Store instance handle in our global variable
+	hInst = hInstance; // Store instance handle in our global variable
 
-   HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-      CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
-    
-   if (!hWnd)
-   {
-      return FALSE;
-   }
-
-   ShowWindow(hWnd, nCmdShow);
-   UpdateWindow(hWnd);
-
-   return TRUE;
+	return TRUE;
 }
 
 //
@@ -122,41 +64,67 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //  WM_DESTROY  - post a quit message and return
 //
 //
-LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+BOOL CALLBACK DlgProc_Main(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-    switch (message)
+	static char m_edText[512] = "";
+
+    switch (msg)
     {
+	case WM_INITDIALOG:
+		{
+			oldEditProc = (WNDPROC)SetWindowLong(
+				GetDlgItem(hDlg, IDC_EDIT_CMD),
+				GWL_WNDPROC, (LONG)EditProc_Cmd);
+		}
+		break;
+
+
     case WM_COMMAND:
         {
-            int wmId = LOWORD(wParam);
-            // Parse the menu selections:
-            switch (wmId)
-            {
-            case IDM_ABOUT:
-                DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
-                break;
-            case IDM_EXIT:
-                DestroyWindow(hWnd);
-                break;
-            default:
-                return DefWindowProc(hWnd, message, wParam, lParam);
-            }
+            //int wmId = LOWORD(wParam);
+            //// Parse the menu selections:
+            //switch (wmId)
+            //{
+            //case IDM_ABOUT:
+            //    DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
+            //    break;
+
+            //case IDM_EXIT:
+            //    DestroyWindow(hWnd);
+            //    break;
+            //default:
+            //    return DefWindowProc(hWnd, message, wParam, lParam);
+            //}
+
+			if (wParam == IDCANCEL)
+				EndDialog(hDlg, 0);
         }
-        break;
+
+		break;
+
+
+	case WM_KEYDOWN:
+		{
+			if (VK_RETURN == wParam)
+				GetDlgItemText(hDlg, IDC_EDIT_CMD, (LPWSTR)m_edText, 256);
+		}
+		break;
+
+
     case WM_PAINT:
         {
             PAINTSTRUCT ps;
-            HDC hdc = BeginPaint(hWnd, &ps);
+            HDC hdc = BeginPaint(hDlg, &ps);
             // TODO: Add any drawing code that uses hdc here...
-            EndPaint(hWnd, &ps);
+            EndPaint(hDlg, &ps);
         }
         break;
-    case WM_DESTROY:
-        PostQuitMessage(0);
-        break;
+
+
     default:
-        return DefWindowProc(hWnd, message, wParam, lParam);
+        return DefWindowProc(hDlg, msg, wParam, lParam);
     }
+
     return 0;
 }
 
@@ -177,5 +145,26 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
         }
         break;
     }
+
     return (INT_PTR)FALSE;
+}
+
+// Main
+int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
+	_In_opt_ HINSTANCE hPrevInstance,
+	_In_ LPWSTR    lpCmdLine,
+	_In_ int       nCmdShow)
+{
+
+	// Perform application initialization:
+	if (!InitInstance(hInstance, nCmdShow))
+	{
+		return FALSE;
+	}
+
+	// show main dialog, proc Main message loop
+	DialogBox(hInstance, L"MAIN", HWND_DESKTOP, (DLGPROC)DlgProc_Main);
+
+
+	return 0;
 }
