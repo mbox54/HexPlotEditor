@@ -66,7 +66,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //
 BOOL CALLBACK DlgProc_Main(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-	static char m_edText[512] = "";
+	static char m_edText[256] = "";
 
     switch (msg)
     {
@@ -163,7 +163,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	}
 
 	// show main dialog, proc Main message loop
-	DialogBox(hInstance, L"MAIN", HWND_DESKTOP, (DLGPROC)DlgProc_Main);
+	DialogBox(hInstance, (LPWSTR)IDD_MAIN, HWND_DESKTOP, (DLGPROC)DlgProc_Main);
 
 
 	return 0;

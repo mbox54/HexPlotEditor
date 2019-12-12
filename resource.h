@@ -12,8 +12,7 @@
 #define IDI_SMALL                       108
 #define IDC_HEXPLOTEDITOR               109
 #define IDR_MAINFRAME                   128
-#define IDD_MAIN                        129
-#define IDC_EDIT1                       1000
+#define IDD_MAIN                        130
 #define IDC_EDIT_CMD                    1000
 #define IDC_EDIT2                       1001
 #define ID_FILE_OP1                     32771
@@ -24,7 +23,7 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
-#define _APS_NEXT_RESOURCE_VALUE        130
+#define _APS_NEXT_RESOURCE_VALUE        131
 #define _APS_NEXT_COMMAND_VALUE         32772
 #define _APS_NEXT_CONTROL_VALUE         1002
 #define _APS_NEXT_SYMED_VALUE           110
