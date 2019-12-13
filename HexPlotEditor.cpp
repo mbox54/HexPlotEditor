@@ -68,37 +68,55 @@ BOOL CALLBACK DlgProc_Main(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	static char m_edText[256] = "";
 
-    switch (msg)
-    {
+	switch (msg)
+	{
 	case WM_INITDIALOG:
+	{
+		oldEditProc = (WNDPROC)SetWindowLong(
+			GetDlgItem(hDlg, IDC_EDIT_CMD),
+			GWL_WNDPROC, (LONG)EditProc_Cmd);
+	}
+	break;
+
+
+	case WM_COMMAND:
+	{
+		if (wParam == IDCANCEL)
 		{
-			oldEditProc = (WNDPROC)SetWindowLong(
-				GetDlgItem(hDlg, IDC_EDIT_CMD),
-				GWL_WNDPROC, (LONG)EditProc_Cmd);
+			EndDialog(hDlg, 0);
 		}
-		break;
+
+		if (wParam == IDC_BUTTON_TEST1)
+		{
+			int msgboxID = MessageBox(hDlg, L"x1", L"x2", MB_OK);
+
+			switch (msgboxID)
+			{
+			case IDCANCEL:
+				// TODO: add code
+				break;
+			case IDOK:
+				// TODO: add code
+				break;
+			}
+		}
+
+		// menu items
+		int wmId = LOWORD(wParam);
+		// Parse the menu selections:
+		switch (wmId)
+		{
+		case IDM_ABOUT:
+		    DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hDlg, About);
+
+		    break;
 
 
-    case WM_COMMAND:
-        {
-            //int wmId = LOWORD(wParam);
-            //// Parse the menu selections:
-            //switch (wmId)
-            //{
-            //case IDM_ABOUT:
-            //    DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
-            //    break;
+		case IDM_EXIT:
+		    DestroyWindow(hDlg);
 
-            //case IDM_EXIT:
-            //    DestroyWindow(hWnd);
-            //    break;
-            //default:
-            //    return DefWindowProc(hWnd, message, wParam, lParam);
-            //}
-
-			if (wParam == IDCANCEL)
-				EndDialog(hDlg, 0);
-        }
+		    break;
+		}
 
 		break;
 
@@ -120,10 +138,7 @@ BOOL CALLBACK DlgProc_Main(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam)
         }
         break;
 
-
-    default:
-        return DefWindowProc(hDlg, msg, wParam, lParam);
-    }
+	}
 
     return 0;
 }
@@ -163,7 +178,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	}
 
 	// show main dialog, proc Main message loop
-	DialogBox(hInstance, (LPWSTR)IDD_MAIN, HWND_DESKTOP, (DLGPROC)DlgProc_Main);
+	DialogBox(hInstance, MAKEINTRESOURCE(IDD_MAIN), HWND_DESKTOP, (DLGPROC)DlgProc_Main);
 
 
 	return 0;

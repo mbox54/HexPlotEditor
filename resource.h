@@ -11,10 +11,14 @@
 #define IDI_HEXPLOTEDITOR               107
 #define IDI_SMALL                       108
 #define IDC_HEXPLOTEDITOR               109
+#define IDC_MENU                        109
 #define IDR_MAINFRAME                   128
 #define IDD_MAIN                        130
 #define IDC_EDIT_CMD                    1000
 #define IDC_EDIT2                       1001
+#define IDC_BUTTON_TEST1                1002
+#define IDC_BUTTON_TEST2                1003
+#define IDC_BUTTON_TEST3                1004
 #define ID_FILE_OP1                     32771
 #define IDC_STATIC                      -1
 
@@ -25,7 +29,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        131
 #define _APS_NEXT_COMMAND_VALUE         32772
-#define _APS_NEXT_CONTROL_VALUE         1002
+#define _APS_NEXT_CONTROL_VALUE         1004
 #define _APS_NEXT_SYMED_VALUE           110
 #endif
 #endif
